@@ -1,0 +1,33 @@
+services:
+  java_app:
+    build: .
+    depends_on:
+      - personsDB
+    environment:
+      - JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+    networks:
+      - app-network
+    stdin_open: true
+    tty: true
+
+
+  personsDB:
+    image: mysql:8.0
+    container_name: personsDB
+    ports:
+      - "3307:3306"  # Изменение порта на хосте с 3306 на 3307
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: persons
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network:
+    driver: bridge
